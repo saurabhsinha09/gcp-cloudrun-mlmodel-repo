@@ -48,18 +48,20 @@ def encode_features(x, n_components=27):
     x_encoded = hashing_ros_enc.transform(x.reset_index(drop=True))
     return x_encoded
 
+# Upload model from loacl artifact directory.
 def _load_model():
-    file_path = "artifacts/xgboost_coupon_recommendation.pkl"
+    file_path = "artifacts/xgboost_coupon_recommendation_hpt.pkl"
     model = pickle.load(open(file_path, "rb"))
     return model
 
+# Load the model from Cloud storage bucket
 def load_model():
     storage_client = storage.Client()
     bucket_name = "dcn-aiml-vertexai-mlops"
     bucket = storage_client.get_bucket(bucket_name)
-    blob = bucket.blob("models/xgboost_coupon_recommendation.pkl")
-    blob.download_to_filename("xgboost_coupon_recommendation.pkl")
-    model = pickle.load(open("xgboost_coupon_recommendation.pkl", "rb"))
+    blob = bucket.blob("models/xgboost_coupon_recommendation_hpt.pkl")
+    blob.download_to_filename("xgboost_coupon_recommendation_hpt.pkl")
+    model = pickle.load(open("xgboost_coupon_recommendation_hpt.pkl", "rb"))
     cols_when_model_builds = model.get_booster().feature_names
     #print(cols_when_model_builds)
     return model
